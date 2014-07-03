@@ -80,6 +80,9 @@ _formatDateTime(DateTime datetime, String type) {
     throw new Exception('Unexpected type: $type.'); //TODO exception type
   }
 
+  if (t == 'timestamptz')
+    datetime = datetime.toUtc();
+
   pad(i) {
     var s = i.toString();
     return s.length == 1 ? '0$s' : s;
@@ -111,10 +114,8 @@ _formatDateTime(DateTime datetime, String type) {
     }
   }
 
-  if (t == 'timestamptz') {
-    // Add timezone offset.
-    throw new Exception('Not implemented'); //TODO
-  }
+  if (t == 'timestamptz')
+    sb.write("Z");
 
   return "'${sb.toString()}'";
 }

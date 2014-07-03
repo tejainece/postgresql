@@ -530,9 +530,15 @@ class _Connection implements Connection {
       case _PG_DATE:
         return DateTime.parse(UTF8.decode(data));
 
+      case _PG_TIMESTAMPZ:
+        var str = UTF8.decode(data),
+          cc = str[str.length - 3];
+        if (cc == '+' || cc == '-')
+          str += ":00"; //convert to ISO 8601 (2012-02-27 13:27:00.123+02:00)
+        return DateTime.parse(str).toLocal();
+
       // Not implemented yet - return a string.
       case _PG_MONEY:
-      case _PG_TIMESTAMPZ:
       case _PG_TIMETZ:
       case _PG_TIME:
       case _PG_INTERVAL:
