@@ -537,6 +537,9 @@ class _Connection implements Connection {
           str += ":00"; //convert to ISO 8601 (2012-02-27 13:27:00.123+02:00)
         return DateTime.parse(str).toLocal();
 
+      case _PG_JSON:
+        return JSON.decode(UTF8.decode(data));
+
       // Not implemented yet - return a string.
       case _PG_MONEY:
       case _PG_TIMETZ:

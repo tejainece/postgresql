@@ -326,6 +326,19 @@ main() {
       );
     });
 
+    test('Select JSON', () {
+      final value = {"a": 1, "b": 2};
+      conn.execute('create temporary table dart_unit_test (a json)');
+      conn.execute("insert into dart_unit_test values (@value)", {"value": value});
+
+      conn.query('select a from dart_unit_test').toList().then(
+        expectAsync1((rows) {
+          expect(rows[0][0]["a"], equals(1));
+          expect(rows[0][0]["b"], equals(2));
+        })
+      );
+    });
+
     //TODO
     // numeric (Need a BigDecimal type).
     // time

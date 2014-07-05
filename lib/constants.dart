@@ -138,6 +138,7 @@ const int _PG_INT8 = 20;
 const int _PG_INT2 = 21;
 const int _PG_INT4 = 23;
 const int _PG_TEXT = 25;
+const int _PG_JSON = 114;
 const int _PG_FLOAT4 = 700;
 const int _PG_FLOAT8 = 701;
 const int _PG_INTERVAL = 704;

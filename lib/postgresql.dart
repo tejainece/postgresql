@@ -138,4 +138,7 @@ abstract class PgServerInformation {
 
 /// Made public for testing.
 String substitute(String source, values) => _substitute(source, values);
-String formatValue(value, String type) => _formatValue(value, type);
+
+typedef String _FormatValue(value, String type);
+_FormatValue formatValue = _formatValue;
+   //Made formatValue is pluggable
