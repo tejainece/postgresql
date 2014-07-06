@@ -327,14 +327,14 @@ main() {
     });
 
     test('Select JSON', () {
-      final value = {"a": 1, "b": 2};
+      final value = {"a": 1, "b": '"', "c": "'"};
       conn.execute('create temporary table dart_unit_test (a json)');
       conn.execute("insert into dart_unit_test values (@value)", {"value": value});
 
       conn.query('select a from dart_unit_test').toList().then(
         expectAsync1((rows) {
-          expect(rows[0][0]["a"], equals(1));
-          expect(rows[0][0]["b"], equals(2));
+          for (final key in value.keys)
+            expect(rows[0][0][key], equals(value[key]));
         })
       );
     });

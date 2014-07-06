@@ -41,7 +41,7 @@ dynamic _formatValue(value, String type) {
   }
 
   if (type == "json" || value is Map) //List could be a candidate but confused with binary
-    return "'${JSON.encode(value)}'";
+    return _formatString(JSON.encode(value));
 
   //if (value is List<int>)
   // return _formatBinary(value, type);
