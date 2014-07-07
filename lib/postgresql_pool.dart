@@ -40,11 +40,9 @@ class _Pool implements Pool {
 		  _max = max;
 	
 	Future start() {
-		var futures = new List<Future>(_min);
-		for (int i = 0; i < _min; i++) {
-			futures[i] = _incConnections();
-		}
-		return Future.wait(futures).then((_) { return true; });
+	  return Future.forEach(new Iterable.generate(_min, (v) => v),
+	        (_) => _incConnections())
+	    .then((_) { return true; });
 	}
 
 	Future<_PoolConnection> connect([int timeout]) {
@@ -121,10 +119,9 @@ class _Pool implements Pool {
 		 	_available.add(conn);
 		 	_connecting--;
 		 })
-		 .catchError((err) {
+		 .catchError((err, st) {
 		 	_connecting--;
-		 	//FIXME logging.
-		 	print('Pool connect error: $err');
+		 	return new Future.error(err, st);
 		 });
 	}
 

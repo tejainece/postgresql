@@ -1,7 +1,10 @@
-name: postgresql
+name: postgresql2
 version: 0.2.13
 author: Greg Lowe <greg@vis.net.nz>
-description: Postgresql database driver.
+description: >
+  A temporary fork from xxgreg/postgresql for aggressive and probabaly unstable
+  support of timezonetz and json. Will be merged back once Greg supports it
+  officially.
 homepage: https://github.com/xxgreg/postgresql
 environment:
   sdk: ">=0.8.10+6 <2.0.0"
