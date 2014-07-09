@@ -5,7 +5,7 @@ version: 0.2.14
 author: Greg Lowe <greg@vis.net.nz>
 description: >
   A temporary fork from xxgreg/postgresql for aggressive and probabaly unstable
-  support of timezonetz and json. Will be merged back once Greg supports it
+  support of timestamptz and json. Will be merged back once Greg supports it
   officially.
 homepage: https://github.com/xxgreg/postgresql
 environment:
