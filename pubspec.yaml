@@ -1,4 +1,4 @@
-name: postgresql2
+name: postgresql
 version: 0.2.14
 author: Greg Lowe <greg@vis.net.nz>
 description: >
