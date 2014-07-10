@@ -16,8 +16,12 @@ dynamic _formatValue(value, String type) {
   if (value is bool)
     return value.toString();
 
-  if (type != null)
+  if (type != null) {
     type = type.toLowerCase();
+
+    if (type == "json") //do it here since value can be anything
+      return _formatString(JSON.encode(value));
+  }
 
   if (value is num) {
     if (type == null || type == 'number')
@@ -40,7 +44,7 @@ dynamic _formatValue(value, String type) {
     return _formatDateTime(value, type);
   }
 
-  if (type == "json" || value is Map) //List could be a candidate but confused with binary
+  if (value is Map) //List could be a candidate but confused with binary
     return _formatString(JSON.encode(value));
 
   //if (value is List<int>)
