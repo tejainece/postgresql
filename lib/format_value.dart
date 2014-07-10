@@ -50,8 +50,15 @@ dynamic _formatValue(value, String type) {
   //if (value is List<int>)
   // return _formatBinary(value, type);
 
-  throw new Exception('Unsupported runtime type as query parameter.');
+  return extendedFormatValue(value, type, _formatString);
 }
+
+typedef _FormatValue(value, String type, formatString(String s));
+
+///The extended value formatter for handling unknown type and value.
+_FormatValue extendedFormatValue = (value, String type, formatString(String s)) {
+  throw new Exception('Unsupported runtime type as query parameter: $value ($type).');
+};
 
 final _escapeRegExp = new RegExp(r"['\r\n\\]");
 
