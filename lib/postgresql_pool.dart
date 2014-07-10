@@ -2,7 +2,7 @@ library postgresql.pool;
 
 import 'dart:async';
 import 'dart:collection';
-import 'package:postgresql/postgresql.dart' as pg;
+import 'postgresql.dart' as pg;
 
 //TODO implement lifetime. When connection is release if been open for more than lifetime millis, then close the connection, and open another. But need some way to stagger, initial creation, so they don't all expire at the same time.
 
