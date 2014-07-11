@@ -548,8 +548,7 @@ class _Connection implements Connection {
       case _PG_NUMERIC:
 
       default:
-        // Return a string for unknown types. The end user can parse this.
-        return UTF8.decode(data);
+        return extendedDecodeValue(col.fieldType, data);
     }
   }
 
@@ -601,3 +600,9 @@ class _Connection implements Connection {
 
   Future get onClosed => _closed.future;
 }
+
+typedef _DecodeValue(int type, List<int> data);
+
+_DecodeValue extendedDecodeValue = (int type, List<int> data)
+=> UTF8.decode(data);
+  // Return a string for unknown types. The end user can parse this.
