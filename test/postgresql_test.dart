@@ -2,7 +2,7 @@ library postgresql_test;
 
 import 'dart:async';
 import 'dart:io';
-import 'package:postgresql/postgresql.dart';
+import 'package:postgresql2/postgresql.dart';
 import 'package:unittest/unittest.dart';
 import 'package:yaml/yaml.dart';
 

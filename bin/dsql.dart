@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
-import 'package:postgresql/postgresql.dart' as pg;
+import 'package:postgresql2/postgresql.dart' as pg;
 
 void main() {
   var uri = 'postgres://testdb:password@localhost:5432/testdb';
