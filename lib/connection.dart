@@ -533,14 +533,11 @@ class _Connection implements Connection {
 
       case _PG_TIMESTAMP:
       case _PG_DATE:
-        return DateTime.parse(UTF8.decode(data));
+        return _parseDateTime(UTF8.decode(data));
 
       case _PG_TIMESTAMPZ:
-        var str = UTF8.decode(data),
-          cc = str[str.length - 3];
-        if (cc == '+' || cc == '-')
-          str += ":00"; //convert to ISO 8601 (2012-02-27 13:27:00.123+02:00)
-        return DateTime.parse(str).toLocal();
+        return _parseDateTime(UTF8.decode(data), timeZone: true)
+            .toLocal();
 
       case _PG_JSON:
         return JSON.decode(UTF8.decode(data));
@@ -604,6 +601,22 @@ class _Connection implements Connection {
   }
 
   Future get onClosed => _closed.future;
+}
+
+DateTime _parseDateTime(String str, {bool timeZone:false}) {
+  final bool bc = str.endsWith(" BC");
+  if (bc)
+    str = str.substring(0, str.length - 3);
+
+  if (timeZone) {
+    final String cc = str[str.length - 3];
+    if (cc == '+' || cc == '-')
+      str += ":00"; //convert to ISO 8601 (2012-02-27 13:27:00.123+02:00)
+  }
+
+  final DateTime val = DateTime.parse(str);
+  return bc ? new DateTime(-val.year, val.month, val.day,
+      val.hour, val.minute, val.second, val.millisecond): val;
 }
 
 typedef _DecodeValue(int type, List<int> data);
