@@ -97,41 +97,46 @@ _formatDateTime(DateTime datetime, String type) {
   if (t == 'timestamptz')
     datetime = datetime.toUtc();
 
-  pad(i) {
-    var s = i.toString();
-    return s.length == 1 ? '0$s' : s;
-  }
-
   //2004-10-19 10:23:54.4455+02
+  int year = datetime.year;
+  final bool bc = year < 0;
+  if (bc) year = -year;
+
   var sb = new StringBuffer()
-    ..write(datetime.year)
+    ..write(_pad(year, 4))
     ..write('-')
-    ..write(pad(datetime.month))
+    ..write(_pad(datetime.month))
     ..write('-')
-    ..write(pad(datetime.day));
+    ..write(_pad(datetime.day));
 
   if (t == 'timestamp' || t == 'timestamptz') {
     sb..write(' ')
-      ..write(pad(datetime.hour))
+      ..write(_pad(datetime.hour))
       ..write(':')
-      ..write(pad(datetime.minute))
+      ..write(_pad(datetime.minute))
       ..write(':')
-      ..write(pad(datetime.second));
+      ..write(_pad(datetime.second));
 
     final int ms = datetime.millisecond;
     if (ms != 0) {
-      sb.write('.');
-      final s = ms.toString();
-      if (s.length == 1) sb.write('00');
-      else if (s.length == 2) sb.write('0');
-      sb.write(s);
+      sb..write('.')..write(_pad(ms, 3));
     }
   }
 
   if (t == 'timestamptz')
     sb.write("Z");
 
+  if (bc)
+    sb.write(" BC");
+
   return "'${sb.toString()}'";
+}
+
+String _pad(int val, [int digits=2]) {
+  String str = val.toString();
+  for (int i = digits - str.length; --i >= 0;)
+    str = '0' + str;
+  return str;
 }
 
 //TODO
