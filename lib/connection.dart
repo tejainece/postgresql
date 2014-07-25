@@ -44,7 +44,9 @@ class _Connection implements Connection {
 
       return future.then((socket) {
         var conn = new _Connection(socket, settings);
-        socket.listen(conn._readData, onError: conn._handleSocketError, onDone: conn._handleSocketClosed);
+        socket.listen((event) => conn._readData(event),
+          onError: (ex, st) => conn._handleSocketError(ex, st),
+          onDone: () => conn._handleSocketClosed());
         conn._state = _SOCKET_CONNECTED;
         conn._sendStartupMessage();
         return conn._connected.future;
@@ -182,18 +184,21 @@ class _Connection implements Connection {
     }
   }
 
-  void _handleSocketError(error) {
+  void _handleSocketError(error, [stackTrace]) {
 
     if (_state == _CLOSED) {
       //FIXME logging
       print('Error after socket closed: $error');
+      if (stackTrace != null)
+        print(stackTrace);
       _destroy();
       return;
     }
 
     _destroy();
 
-    var ex = new _PgClientException('Socket error.', error);
+    var ex = error is PgException ? error:
+        new _PgClientException('Socket error.', error);
 
     if (!_hasConnected) {
       _connected.completeError(ex);
@@ -257,9 +262,9 @@ class _Connection implements Connection {
         _readMessage(msgType, length);
       }
 
-    } on Exception catch (e) {
+    } catch (e, st) {
       _destroy();
-      throw new _PgClientException('Error reading data.', e); //TODO test that this will be caught by unhandled stream.
+      _handleSocketError(new _PgClientException('Error reading data.', e), st); //TODO test that this will be caught by unhandled stream.
     }
   }
 
