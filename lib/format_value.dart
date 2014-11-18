@@ -59,6 +59,10 @@ typedef _FormatValue(value, String type, formatString(String s));
 _FormatValue extendedFormatValue = (value, String type, formatString(String s)) {
   throw new Exception('Unsupported runtime type as query parameter: $value ($type).');
 };
+///The default date time type. It is used if the type is unknown and the object
+///is `DateTime`.
+///You can override it to `timestamptz`.
+String defaultDateTimeType = "timestamp";
 
 final _escapeRegExp = new RegExp(r"['\r\n\\]");
 
@@ -88,7 +92,7 @@ _formatDateTime(DateTime datetime, String type) {
     return 'null';
 
   String escaped;
-  var t = (type == null) ? 'timestamp' : type.toLowerCase();
+  var t = (type == null) ? defaultDateTimeType : type.toLowerCase();
 
   if (t != 'date' && t != 'timestamp' && t != 'timestamptz') {
     throw new Exception('Unexpected type: $type.'); //TODO exception type

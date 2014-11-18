@@ -74,7 +74,7 @@ class _Connection implements Connection {
           // TODO validate certs
           new Future.sync(() => SecureSocket.secure(socket, onBadCertificate: (cert) => true))
             .then((s) => completer.complete(s))
-            .catchError((e) => completer.completeError(e));
+            .catchError((e, st) => completer.completeError(e, st));
         }
       });
 
@@ -82,8 +82,8 @@ class _Connection implements Connection {
       socket.add([0, 0, 0, 8, 4, 210, 22, 47]);
 
     })
-    .catchError((e) {
-      completer.completeError(e);
+    .catchError((e, st) {
+      completer.completeError(e, st);
     });
 
     return completer.future;
@@ -201,7 +201,7 @@ class _Connection implements Connection {
         new _PgClientException('Socket error.', error);
 
     if (!_hasConnected) {
-      _connected.completeError(ex);
+      _connected.completeError(ex, stackTrace);
     } else if (_query != null) {
       _query.addError(ex);
     } else {
