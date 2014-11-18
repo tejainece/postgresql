@@ -41,7 +41,7 @@ dynamic _formatValue(value, String type) {
 
   if (value is DateTime) {
     //TODO check types.
-    return _formatDateTime(value, type);
+    return formatDateTime(value, type);
   }
 
   if (value is Map) //List could be a candidate but confused with binary
@@ -59,10 +59,6 @@ typedef _FormatValue(value, String type, formatString(String s));
 _FormatValue extendedFormatValue = (value, String type, formatString(String s)) {
   throw new Exception('Unsupported runtime type as query parameter: $value ($type).');
 };
-///The default date time type. It is used if the type is unknown and the object
-///is `DateTime`.
-///You can override it to `timestamptz`.
-String defaultDateTimeType = "timestamp";
 
 final _escapeRegExp = new RegExp(r"['\r\n\\]");
 
@@ -86,13 +82,16 @@ _formatString(String s) {
   return " E'$escaped' ";
 }
 
-_formatDateTime(DateTime datetime, String type) {
+typedef _FormatDateTime(DateTime datetime, String type);
+
+///The default formatter for storing the date tie value
+_FormatDateTime formatDateTime = (DateTime datetime, String type) {
 
   if (datetime == null)
     return 'null';
 
   String escaped;
-  var t = (type == null) ? defaultDateTimeType : type.toLowerCase();
+  var t = (type == null) ? 'timestamp' : type.toLowerCase();
 
   if (t != 'date' && t != 'timestamp' && t != 'timestamptz') {
     throw new Exception('Unexpected type: $type.'); //TODO exception type
@@ -134,7 +133,7 @@ _formatDateTime(DateTime datetime, String type) {
     sb.write(" BC");
 
   return "'${sb.toString()}'";
-}
+};
 
 String _pad(int val, [int digits=2]) {
   String str = val.toString();
