@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:unittest/unittest.dart';
-import 'package:postgresql2/postgresql.dart';
-import 'package:postgresql2/postgresql_pool.dart';
+import 'package:postgresql/postgresql.dart';
+import 'package:postgresql/postgresql_pool.dart';
 import 'package:yaml/yaml.dart';
 
 Settings loadSettings(){
@@ -15,15 +15,15 @@ main() {
   Pool pool;
   int tout = 2 * 60 * 1000; // Should be longer than usage
 
-  setUp(() => pool = new Pool(loadSettings().toUri(), timeout: tout, min: 2, max: 5));
+  setUp(() => pool = new Pool(loadSettings().toUri(), timeout: tout, min: 2, max: 2));
 
   test('Connect', () {
   	var pass = expectAsync0(() {});
 
     testConnect(_) {
-    	pool.connect().then((conn) {
-        print(pool);
-    		conn.query("select 'oi';").toList()
+      print(pool.diagnostics);
+    	pool.connect(null, 'testConnect').then((conn) {
+    		conn.query("select 'passed';").toList()
     			.then(print)
     			.then((_) => conn.close())
           .catchError((err) => print('Query error: $err'));
@@ -32,10 +32,11 @@ main() {
     }
 
     slowQuery() {
-     pool.connect().then((conn) {
-        print(pool);
-        conn.query("select generate_series (1, 100000);").toList()
+     print(pool);
+     pool.connect(null, 'testConnect').then((conn) {
+        conn.query("select generate_series (1, 1000);").toList()
           .then((_) => print('slow query done.'))
+          .then((_) => new Future.delayed(new Duration(seconds: 1)))
           .then((_) => conn.close())
           .catchError((err) => print('Query error: $err'));
       })
@@ -45,18 +46,17 @@ main() {
     // Wait for initial connections to be made before starting
     var timer;
     pool.start().then((_) {
-      timer = new Timer.periodic(new Duration(milliseconds: 100), (_) {
-        print(pool);
-        for (var i = 0; i < 10; i++)
-          testConnect(null);
-      });
+      slowQuery();
+      slowQuery();
+      testConnect(null);
+
     }).catchError((err, st) {
       print('Error starting connection pool.');
       print(err);
       print(st);
     });
 
-    new Future.delayed(new Duration(seconds: 5), () {
+    new Future.delayed(new Duration(seconds: 3), () {
       if (timer != null) timer.cancel();
       print(pool.diagnostics);
       pool.destroy();
