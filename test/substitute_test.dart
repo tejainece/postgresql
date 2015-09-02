@@ -24,6 +24,11 @@ main() {
       expect(result, equals(  """'@id\\'@id' $dd@id$dd 20"@id" """));
     });
 
+    test('Substitute C', () {
+      var result = substitute("@id@@@id@>@id", {'id': 20});
+      expect(result, equals(  "20@@20@>20"));
+    });
+
     test('Substitute 1', () {
       var result = substitute('@id', {'id': 20});
       expect(result, equals('20'));

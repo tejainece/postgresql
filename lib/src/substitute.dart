@@ -1,7 +1,6 @@
 part of postgresql;
 
 const int _TOKEN_TEXT = 1;
-const int _TOKEN_AT = 2;
 const int _TOKEN_IDENT = 3;
 
 const int _a = 97;
@@ -13,7 +12,7 @@ const int _9 = 57;
 const int _at = 64;
 const int _colon = 58;
 const int _underscore = 95;
-const int _quot = 34, _squot = 39, _dollar = 36;
+const int _quot = 34, _squot = 39, _dollar = 36, _gt = 62;
 
 class _Token {
   _Token(this.type, this.value, [this.typeName]);
@@ -136,21 +135,23 @@ class _Scanner {
     
     assert(_r.hasMore());
     
-    // '@@', '@ident', or '@ident:type'
+    // '@@', '@>' @ident', or '@ident:type'
     if (_r.peek() == _at) {
       _r.read();
       
       if (!_r.hasMore())
         throw new ParseException('Unexpected end of input.');
       
-      // Escaped '@' character.
-      if (_r.peek() == _at) {
-        _r.read();
-        return new _Token(_TOKEN_AT, '@');
+      // '@@' or '@>' operator
+      //Tom: we can't support the <@ operator (because of syntax ambiguous)
+      if (!isIdentifier(_r.peek())) {
+        final int c = _r.read();
+        final String s = new String.fromCharCode(c);
+        if (c == _at || c == _gt)
+          return new _Token(_TOKEN_TEXT, '@$s');
+
+        throw new ParseException('Expected alphanumeric identifier character after "@": "@$s"');
       }
-      
-      if (!isIdentifier(_r.peek()))
-        throw new ParseException('Expected alphanumeric identifier character after "@".');
 
       // Identifier
       var ident = _r.readWhile(isIdentifier);      
