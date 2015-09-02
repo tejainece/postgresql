@@ -142,15 +142,10 @@ class _Scanner {
       if (!_r.hasMore())
         throw new ParseException('Unexpected end of input.');
       
-      // '@@' or '@>' operator
-      //Tom: we can't support the <@ operator (because of syntax ambiguous)
+      // '@@' or '@>' operator and '<@ '
       if (!isIdentifier(_r.peek())) {
-        final int c = _r.read();
-        final String s = new String.fromCharCode(c);
-        if (c == _at || c == _gt)
-          return new _Token(_TOKEN_TEXT, '@$s');
-
-        throw new ParseException('Expected alphanumeric identifier character after "@": "@$s"');
+        final String s = new String.fromCharCode(_r.read());
+        return new _Token(_TOKEN_TEXT, '@$s');
       }
 
       // Identifier
