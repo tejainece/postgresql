@@ -110,7 +110,7 @@ main() {
   });
 
 
-  group('Query', () {
+  /*group('Query', () {
 
     Connection conn;
 
@@ -138,6 +138,6 @@ main() {
             .then(expectAsync1((rows) {}));
     });
 
-  });
+  });*/
 
 }

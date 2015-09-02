@@ -57,6 +57,6 @@ main() {
   });
 
 	test('Load settings from yaml file', () {
-	  Settings s = loadSettings();
+	  loadSettings();
 	});
 }
