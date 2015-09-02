@@ -13,6 +13,17 @@ Settings loadSettings(){
 main() {
 
   group('Substitute by id', () {
+    test('Substitute A', () {
+      var result = substitute("""'@id\\'@id'@id"@id" """, {'id': 20});
+      expect(result, equals(  """'@id\\'@id'20"@id" """));
+    });
+
+    test('Substitute B', () {
+      final dd = r'$d$';
+      var result = substitute("""'@id\\'@id' $dd@id$dd @id"@id" """, {'id': 20});
+      expect(result, equals(  """'@id\\'@id' $dd@id$dd 20"@id" """));
+    });
+
     test('Substitute 1', () {
       var result = substitute('@id', {'id': 20});
       expect(result, equals('20'));

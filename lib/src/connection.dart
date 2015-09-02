@@ -10,7 +10,6 @@ class _Connection implements Connection {
   int __state = _NOT_CONNECTED;
   int get _state => __state;
   set _state(int s) {
-    var was = __state;
     __state = s;
     //print('Connection state change: ${_stateToString(was)} => ${_stateToString(s)}.');
   }
@@ -362,11 +361,6 @@ class _Connection implements Connection {
   void _readParameterStatus(int msgType, int length) {
     assert(_buffer.bytesAvailable >= length);
     _buffer.readBytes(length);
-  }
-
-  Stream _errorStream(err) {
-    return new Stream.fromFuture(
-        new Future.error(err));
   }
 
   Stream query(String sql, [values]) {

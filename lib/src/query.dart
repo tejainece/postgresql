@@ -5,7 +5,6 @@ class _Query {
   
   int get _state => __state;
   set _state(int s) {
-    var was = __state;
     __state = s;
     //print('Query state change: ${_queryStateToString(was)} => ${_queryStateToString(s)}.');
   }
@@ -13,7 +12,6 @@ class _Query {
   final String sql;
   final StreamController<_Row> _controller = new StreamController<_Row>();
   int _commandIndex = 0;
-  int _rowIndex = -1;
   int _columnCount;
   List<_Column> _columns;
   List<dynamic> _rowData;

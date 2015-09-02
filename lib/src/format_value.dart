@@ -90,7 +90,6 @@ _FormatDateTime formatDateTime = (DateTime datetime, String type) {
   if (datetime == null)
     return 'null';
 
-  String escaped;
   var t = (type == null) ? 'timestamp' : type.toLowerCase();
 
   if (t != 'date' && t != 'timestamp' && t != 'timestamptz') {
@@ -144,7 +143,7 @@ String _pad(int val, [int digits=2]) {
 
 //TODO
 // See http://www.postgresql.org/docs/9.0/static/sql-syntax-lexical.html#SQL-SYNTAX-STRINGS-ESCAPE
-_formatBinary(List<int> buffer) {
+/*_formatBinary(List<int> buffer) {
   //var b64String = ...;
   //return " decode('$b64String', 'base64') ";
-}
+}*/

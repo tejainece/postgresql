@@ -6,15 +6,15 @@ import 'package:crypto/crypto.dart';
 import 'dart:io';
 import 'dart:convert';
 
-part 'buffer.dart';
-part 'connection.dart';
-part 'constants.dart';
-part 'exceptions.dart';
-part 'format_value.dart';
-part 'message_buffer.dart';
-part 'query.dart';
-part 'settings.dart';
-part 'substitute.dart';
+part 'src/buffer.dart';
+part 'src/connection.dart';
+part 'src/constants.dart';
+part 'src/exceptions.dart';
+part 'src/format_value.dart';
+part 'src/message_buffer.dart';
+part 'src/query.dart';
+part 'src/settings.dart';
+part 'src/substitute.dart';
 
 /// Connect to a PostgreSQL database.
 /// A postgres uri has the following format: 'postgres://testdb:password@localhost:5432/testdb'.

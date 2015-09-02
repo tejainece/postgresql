@@ -65,8 +65,8 @@ class Settings {
    * is present.
    */
   Settings.fromMap(Map config){
-    final String host = config.containsKey(HOST) ?
-        config[HOST] : DEFAULT_HOST;
+    //final String host = config.containsKey(HOST) ?
+    //    config[HOST] : DEFAULT_HOST;
     final int port = config.containsKey(PORT) ?
         config[PORT] is int ? config[PORT]
           : throw new FormatException("Specified port is not a valid number")

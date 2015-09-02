@@ -9,22 +9,22 @@ const int _BUSY = 6;
 const int _STREAMING = 7; // state is called "ready" in libpq. Doesn't make sense in a non-blocking impl. 
 const int _CLOSED = 8;
 
-String _stateToString(int s) {
+/*String _stateToString(int s) {
   if (s < 0 || s > 8)
     return '?';
   return ['?', 'NOT_CONNECTED', 'SOCKET_CONNECTED', 'AUTHENTICATING', 'AUTHENTICATED', 'IDLE', 'BUSY', 'STREAMING', 'CLOSED'][s];
-}
+}*/
 
 const int _QUEUED = 1;
 //const int _BUSY = 6;
 //const int _STREAMING = 7;
 const int _DONE = 8;
 
-String _queryStateToString(int s) {
+/*String _queryStateToString(int s) {
   if (s < 0 || s > 8)
     return '?';
   return ['?', 'QUEUED', '?', '?', '?', '?', 'BUSY', 'STREAMING', 'DONE'][s];
-}
+}*/
 
 const int _I = 73;
 const int _T = 84;
@@ -73,7 +73,7 @@ const int _MSG_ROW_DESCRIPTION = 84; //'T'.charCodeAt(0);
 
 
 //TODO Yuck - enums please. Must be a better way of doing consts.
-String _messageName(int msg) {
+/*String _messageName(int msg) {
   switch (msg) {
     case _MSG_AUTH_REQUEST: return 'AuthenticationRequest';
     case _MSG_ERROR_RESPONSE: return 'ErrorResponse';
@@ -102,7 +102,7 @@ String _messageName(int msg) {
     default:
       return 'Unknown message type: ${_itoa(msg)} $msg.';
   }
-}
+}*/
 
 String _itoa(int c) {
   try {
@@ -152,7 +152,7 @@ const int _PG_TIMESTAMPZ = 1184;
 const int _PG_TIMETZ = 1266;
 const int _PG_NUMERIC = 1700;
 
-String _pgTypeToString(int pgType) {
+/*String _pgTypeToString(int pgType) {
   switch(pgType) {
     case 16: return 'bool';
     case 17: return 'bytea';
@@ -470,4 +470,4 @@ String _pgTypeToString(int pgType) {
     default:
       return 'Unknown pgType: $pgType';
    }
-}
+}*/
