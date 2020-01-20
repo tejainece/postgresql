@@ -4,14 +4,17 @@ library postgresql.mock;
 import 'dart:async';
 import 'dart:collection';
 import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:postgresql2/constants.dart';
 import 'package:postgresql2/postgresql.dart' as pg;
 import 'package:postgresql2/src/pool_impl.dart' as pi;
 import 'package:postgresql2/src/postgresql_impl/postgresql_impl.dart';
-import 'package:func/func.dart';
+
 part 'mock_server.dart';
 part 'mock_socket_server.dart';
 
+typedef R Func2<A, B, R>(A a, B b);
 Function mockLogger;
 
 void _log(msg) { if (mockLogger != null) mockLogger(msg); }
@@ -59,7 +62,7 @@ abstract class Backend {
   
   /// Send data over the socket from the mock server to the client listening
   /// on the socket.
-  void sendToClient(List<int> data);
+  void sendToClient(Uint8List data);
   
   /// Clear out received data.
   void clear();
@@ -115,14 +118,14 @@ class MockConnection implements pg.Connection {
     return onQuery(sql, values);
   }
 
-  Func2<String, dynamic, Stream<pg.Row>> onQuery = (sql, values) {};
+  Func2<String, dynamic, Stream<pg.Row>> onQuery = (sql, values) {return null;};
 
   Future<int> execute(String sql, [values]) {
     _log('execute("$sql")');
     return onExecute(sql, values);
   }
 
-  Func2<String, dynamic, Future<int>> onExecute = (sql, values) {};
+  Func2<String, dynamic, Future<int>> onExecute = (sql, values) {return null;};
 
 
   void close() {
@@ -148,7 +151,6 @@ abstract class MockRow implements pg.Row {
   factory MockRow.fromMap(LinkedHashMap map) => new _MapMockRow(map);
 }
 
-@proxy
 class _MapMockRow implements MockRow {
 
   _MapMockRow(this._values);
@@ -164,6 +166,7 @@ class _MapMockRow implements MockRow {
     _values.forEach(f);
   }
 
+  @override
   noSuchMethod(Invocation invocation) {
     var name = invocation.memberName;
     if (invocation.isGetter) {

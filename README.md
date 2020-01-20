@@ -20,6 +20,8 @@ ex is PostgresqlException
 
 ## Basic usage
 
+* [API Reference](http://www.dartdocs.org/documentation/postgresql2/0.5.3)
+
 ### Obtaining a connection
 
 ```dart
@@ -246,3 +248,4 @@ http://www.dartlang.org/
 ## Who Uses
 
 * [Quire](https://quire.io) - a simple, collaborative, multi-level task management tool.
+* [Keikai](https://keikai.io) - a sophisticated spreadsheet for big data

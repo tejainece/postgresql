@@ -30,6 +30,7 @@ String encodeString(String s, {bool trimNull: false}) {
         throw new PostgresqlException('Not allowed: null character', '');
       return '';
    }
+   throw StateError("$m");
  });
 
   return " E'$escaped' ";
@@ -63,8 +64,10 @@ class DefaultTypeConverter implements TypeConverter {
     if (type != null)
       type = type.toLowerCase();
   
-    if (type == 'text' || type == 'string')
-      return encodeString(value.toString());
+    if (type == 'text' || type == 'string') {
+      if (value is! String) throwError(); //play safe
+      return encodeString(value);
+    }
   
     if (type == 'integer'
         || type == 'smallint'
@@ -102,7 +105,7 @@ class DefaultTypeConverter implements TypeConverter {
     }
   
     if (type == 'json' || type == 'jsonb')
-      return encodeString(JSON.encode(value));
+      return encodeString(json.encode(value));
   
   //  if (type == 'bytea') {
   //    if (value is! List<int>) throwError();
@@ -132,11 +135,11 @@ class DefaultTypeConverter implements TypeConverter {
     if (value is DateTime)
       return encodeDateTime(value, isDateOnly: false);
   
-    if (value is bool)
+    if (value is bool || value is BigInt)
       return value.toString();
   
     if (value is Map)
-      return encodeString(JSON.encode(value));
+      return encodeString(json.encode(value));
   
     if (value is List)
       return encodeArray(value);
@@ -147,8 +150,8 @@ class DefaultTypeConverter implements TypeConverter {
   
   String encodeNumber(num n) {
     if (n.isNaN) return "'nan'";
-    if (n == double.INFINITY) return "'infinity'";
-    if (n == double.NEGATIVE_INFINITY) return "'-infinity'";
+    if (n == double.infinity) return "'infinity'";
+    if (n == double.negativeInfinity) return "'-infinity'";
     return n.toString();
   }
   
@@ -236,14 +239,20 @@ class DefaultTypeConverter implements TypeConverter {
   
       case _PG_JSON:
       case _PG_JSONB:
-        return JSON.decode(value);
+        return json.decode(value);
   
+      case _PG_NUMERIC:
+        try {
+          return BigInt.parse(value);
+        } catch (_) {
+        }
+        return value;
+
       // Not implemented yet - return a string.
       case _PG_MONEY:
       case _PG_TIMETZ:
       case _PG_TIME:
       case _PG_INTERVAL:
-      case _PG_NUMERIC:
   
       //TODO arrays
       //TODO binary bytea
